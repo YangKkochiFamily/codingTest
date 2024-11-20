@@ -1,4 +1,4 @@
-package pccp.find_collision.seoklee;
+package programmers.pccp.find_collision.seoklee;
 
 import java.util.Arrays;
 import java.util.List;
