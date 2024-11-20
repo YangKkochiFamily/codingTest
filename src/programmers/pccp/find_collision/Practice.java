@@ -28,9 +28,19 @@ public class Practice {
        이때 모든 로봇이 운송을 마칠 때까지 발생하는 위험한 상황의 횟수를 return 하도록 solution 함수를 완성해 주세요.
      **/
     Solution solution = new Solution();
-    System.out.println(solution.solution(point1, routes1)); // 1 
-    System.out.println(solution.solution(point2, routes2)); // 9
-    System.out.println(solution.solution(point3, routes3)); // 0
+    print(1, solution.solution(point1, routes1)); // 1
+    print(9, solution.solution(point2, routes2)); // 9
+    print(0, solution.solution(point3, routes3)); // 0
 
+  }
+
+  public static void print(int expect, int answer) {
+    System.out.println("입력하신 값은 [" +  answer + "] 예제의 답은 [" + expect  + "] 입니다.");
+    if(expect == answer) {
+      System.out.println("정답입니다.");
+    }
+    else {
+      System.out.println("다시 확인해주세요.");
+    }
   }
 }
