@@ -5,3 +5,8 @@
 
 https://school.programmers.co.kr/learn/courses/30/lessons/340211
 
+# 2024-11-29 ~ 2024-12-12
+
+## [PCCP 기출문제] 2번 / 석유시추
+
+https://school.programmers.co.kr/learn/courses/30/lessons/250136
