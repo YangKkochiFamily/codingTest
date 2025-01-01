@@ -6,7 +6,7 @@ public class Solution {
     private int n, m;
     private int[][] land;
     private boolean[][] visited;
-    private final Map<Integer, Integer> oilSizes = new HashMap<>();
+    private Map<Integer, Integer> oilSizes = new HashMap<>();
     private int currentOilId = 2;
 
     public int solution(int[][] land) {
