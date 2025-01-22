@@ -1,40 +1,40 @@
 def solution(friends, gifts):
   dic = {x : Friend() for x, y in zip(friends, range(len(friends)))}
 
+  # 대상보다 많이 줬으면 받을 것임
+  # 대상과 주고받은 갯수가 동일하다면 덜 받은사람이 선물을 받기로함.
+
   for gift in gifts:
     giver, receiver = gift.split()
     dic[giver].give(receiver)
     dic[receiver].receive(giver)
 
-  for friend in friends:
-    f = dic[friend]
-    for compare in filter(lambda c: c != friend,friends):
-      # 대상보다 많이 줬으면 받을 것임
-      # 대상과 주고받은 갯수가 동일하다면 덜 받은사람이 선물을 받기로함.
-      if f.get_give_cnt(compare) > f.get_receive_cnt(compare) or (
-          f.get_give_cnt(compare) == f.get_receive_cnt(compare) and f.score > dic[compare].score ):
-        f.gift += 1
+  for me in friends:
+    for friend in filter(lambda c: c != me,friends):
+      if dic[me].get_give_cnt(friend) > dic[me].get_receive_cnt(friend) or (
+          dic[me].get_give_cnt(friend) == dic[me].get_receive_cnt(friend) and dic[me].score > dic[friend].score ):
+        dic[me].gift += 1
 
   return max([dic[k].gift for k in dic.keys()])
 
 
 class Friend:
   def __init__(self):
-    self.gift_to = dict()
+    self.give_to = dict()
     self.gift_from = dict()
     self.score = 0
     self.gift = 0
 
-  def receive(self, _from):
-    self.gift_from[_from] = self.get_receive_cnt(_from) + 1
+  def receive(self, friend_name):
+    self.gift_from[friend_name] = self.get_receive_cnt(friend_name) + 1
     self.score -= 1
 
-  def give(self, _to):
-    self.gift_to[_to] = self.get_give_cnt(_to) + 1
+  def give(self, friend_name):
+    self.give_to[friend_name] = self.get_give_cnt(friend_name) + 1
     self.score += 1
 
   def get_give_cnt(self, compare):
-    return self.gift_to.get(compare, 0)
+    return self.give_to.get(compare, 0)
 
   def get_receive_cnt(self, compare):
     return self.gift_from.get(compare, 0)
