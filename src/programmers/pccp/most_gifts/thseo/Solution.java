@@ -1,7 +1,10 @@
 package programmers.pccp.most_gifts.thseo;
 //https://school.programmers.co.kr/learn/courses/30/lessons/258712
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Solution {
@@ -9,23 +12,42 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.solution(new String[] {"muzi", "ryan", "frodo", "neo"}, new String[]{"muzi frodo", "muzi frodo", "ryan muzi", "ryan muzi", "ryan muzi", "frodo muzi", "frodo ryan", "neo muzi"});
-    }
-    public int solution(String[] friends, String[] gifts) {
-        int answer = 0;
-        friendMap  = Friend.toMap(friends);
+//        solution.solution(new String[] {"muzi", "ryan", "frodo", "neo"}, new String[]{"muzi frodo", "muzi frodo", "ryan muzi", "ryan muzi", "ryan muzi", "frodo muzi", "frodo ryan", "neo muzi"});
+        solution.solution(new String[]{"joy", "brad", "alessandro", "conan", "david"}, new String[]{"alessandro brad", "alessandro joy", "alessandro conan", "david alessandro", "alessandro david"});
 
-        for(String gift : gifts) {
+    }
+
+    public int solution(String[] friends, String[] gifts) {
+        friendMap = Friend.toMap(friends);
+
+        for (String gift : gifts) {
             giveGift(gift);
         }
 
         calculateNextGift();
-        return answer;
+
+
+        return maxNextGift();
+    }
+
+    private int maxNextGift() {
+        return friendMap.values().stream().mapToInt(Friend::getNextGift).max().orElse(0);
+
     }
 
     private void calculateNextGift() {
-        friendMap.values().forEach(friend -> {
-            friend.calculateNextGift();
+        friendMap.values().forEach(my -> {
+            Map<String, Integer> sentHistory = my.sentHistory;
+            sentHistory.entrySet().forEach(sent -> {
+                Friend friend = friendMap.get(sent.getKey());
+                if (sent.getValue() > friend.sentHistory.get(my.name)) {
+                    my.nextGift++;
+                } else if ((sent.getValue() == 0 && friend.sentHistory.get(my.name) == 0) || Objects.equals(sent.getValue(), friend.sentHistory.get(my.name))) {
+                    if (my.giftPoint > friend.giftPoint) {
+                        my.nextGift++;
+                    }
+                }
+            });
         });
     }
 
@@ -43,11 +65,11 @@ public class Solution {
     }
 
     static class Friend {
-        private String name;
+        private final String name;
         private int totalSendCount;
         private int totalReceiveCount;
         private int giftPoint;
-        private Map<String, Integer> sentHistory = new HashMap<String, Integer>();
+        private final Map<String, Integer> sentHistory = new HashMap<String, Integer>();
 
         private int nextGift;
 
@@ -58,14 +80,11 @@ public class Solution {
         }
 
         public void setSentHistory(String[] friends) {
-            Arrays.stream(friends)
-                    .filter(name -> !this.name.equals(name))
-                    .forEach(name -> this.sentHistory.put(name, 0));
+            Arrays.stream(friends).filter(name -> !this.name.equals(name)).forEach(name -> this.sentHistory.put(name, 0));
         }
+
         public static Map<String, Friend> toMap(String[] friends) {
-            return Arrays.stream(friends)
-                .map(name -> new Friend(name, friends))
-                .collect(Collectors.toMap(friend -> friend.name, friend -> friend));
+            return Arrays.stream(friends).map(name -> new Friend(name, friends)).collect(Collectors.toMap(friend -> friend.name, friend -> friend));
         }
 
         public void send(String toFriend) {
@@ -78,6 +97,10 @@ public class Solution {
         public void receive() {
             totalReceiveCount++;
             giftPoint--;
+        }
+
+        public int getNextGift() {
+            return nextGift;
         }
     }
 }
