@@ -31,18 +31,22 @@ public class Solution {
     }
 
     private int maxNextGift() {
-        return friendMap.values().stream().mapToInt(Friend::getNextGift).max().orElse(0);
+        return friendMap.values().stream()
+                .mapToInt(Friend::getNextGift)
+                .max()
+                .orElse(0);
 
     }
 
     private void calculateNextGift() {
         friendMap.values().forEach(my -> {
-            Map<String, Integer> sentHistory = my.sentHistory;
+            Map<String, Integer> sentHistory = my.sentHistory; //내가 친구들 각각 선물을 보낸 내역들
             sentHistory.entrySet().forEach(sent -> {
-                Friend friend = friendMap.get(sent.getKey());
-                if (sent.getValue() > friend.sentHistory.get(my.name)) {
+                Friend friend = friendMap.get(sent.getKey()); //내가 선물을 보낸 친구
+                if (sent.getValue() > friend.sentHistory.get(my.name)) {//내가 친구에게 보낸 선물의 수 > 친구가 나에게 선물을 보낸 수
                     my.nextGift++;
-                } else if ((sent.getValue() == 0 && friend.sentHistory.get(my.name) == 0) || Objects.equals(sent.getValue(), friend.sentHistory.get(my.name))) {
+                } else if ((sent.getValue() == 0 && friend.sentHistory.get(my.name) == 0) //서로 보낸게 없거나
+                        || Objects.equals(sent.getValue(), friend.sentHistory.get(my.name))) {// 서로 보낸 선물의 수가 같으면
                     if (my.giftPoint > friend.giftPoint) {
                         my.nextGift++;
                     }
@@ -64,6 +68,9 @@ public class Solution {
         toFriend.receive();
     }
 
+    /*
+     * 선물을 보내는 객체(나 자신)
+     * */
     static class Friend {
         private final String name;
         private int totalSendCount;
@@ -79,12 +86,25 @@ public class Solution {
             setSentHistory(friends);
         }
 
+        //친구들 별로 내가 선물을 보낸 내역들을 0으로 초기화
+        //key : 친구 이름
+        //value : 선물을 보낸 횟수
         public void setSentHistory(String[] friends) {
-            Arrays.stream(friends).filter(name -> !this.name.equals(name)).forEach(name -> this.sentHistory.put(name, 0));
+            Arrays.stream(friends)
+                    .filter(name -> !this.name.equals(name))
+                    .forEach(name ->
+                            this.sentHistory.put(name, 0));
         }
 
+        //친구 배열을 각각 객체로 만들고, 각각 이름과 객체로 map을 만ㄴ듬
         public static Map<String, Friend> toMap(String[] friends) {
-            return Arrays.stream(friends).map(name -> new Friend(name, friends)).collect(Collectors.toMap(friend -> friend.name, friend -> friend));
+            return Arrays.stream(friends)
+                    .map(name ->
+                            new Friend(name, friends))
+                    .collect(
+                            Collectors.toMap(
+                                    friend -> friend.name,
+                                    friend -> friend));
         }
 
         public void send(String toFriend) {
