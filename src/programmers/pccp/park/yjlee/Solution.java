@@ -7,7 +7,6 @@ public class Solution {
     public int solution(int[] mats, String[][] park) {
         int rows = park.length;
         int cols = park[0].length;
-        int result = -1;
 
         // 내림차순 정렬
         Integer[] matList = Arrays.stream(mats).boxed().toArray(Integer[]::new);
@@ -25,10 +24,8 @@ public class Solution {
                 }
             }
         }
-
-        return result;
+        return -1;
     }
-
 
     private boolean isMatPlacementValid(String[][] park, int i, int j, int mat, int rows, int cols) {
         if (i + mat <= rows && j + mat <= cols) { // 범위 체크
